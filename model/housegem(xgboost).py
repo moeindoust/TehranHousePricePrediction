@@ -21,6 +21,20 @@ def remove_outliers_iqr(df, column):
     df_filtered = df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
     return df_filtered
 
+
+#Note* : batavajoh be inke qeimat khone be shadidan motafavet ast, baraye hazf outlier ha dar soton gheymat az IQR ba estefade az ziad kardan 2.5 bejaye 1.5 estefade mikonim.
+def remove_outliers_iqr_price(df, column):
+    """
+    Removes outliers from a specified column in a DataFrame using the IQR method tunned*.
+    """
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 2.5 * IQR
+    print(f'{column} Lower bound: {lower_bound}, Upper bound: {upper_bound}')
+    df_filtered = df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+    return df_filtered
 # load karardan data
 # hatamn address file ra qabl az ejra check konid
 try:
@@ -34,7 +48,7 @@ cdf = df_original[['Area', 'Room', 'Parking', 'Warehouse', 'Elevator', 'Address'
 
 #paksazi
 df_no_outliers_area = remove_outliers_iqr(cdf, 'Area')
-df_no_outliers = remove_outliers_iqr(df_no_outliers_area, 'Price')
+df_no_outliers = remove_outliers_iqr_price(df_no_outliers_area, 'Price')
 
 print(f"Tedad record after IQR: {len(df_no_outliers)}")
 
@@ -102,13 +116,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 plt.figure(figsize=(10, 6))
-sns.scatterplot(x=y_test_original_scale, y=y_pred_original_scale, alpha=0.6)
-plt.plot([y_test_original_scale.min(), y_test_original_scale.max()], [y_test_original_scale.min(), y_test_original_scale.max()], 'r--', lw=2)
+sns.scatterplot(x=y_test_original_scale, y=y_pred_original_scale, alpha=0.6,label=f"R²-Score = {r2:.3f}")
+plt.plot([y_test_original_scale.min(), y_test_original_scale.max()], [y_test_original_scale.min(), y_test_original_scale.max()], 'r--', lw=2,label=f"R² = {r2:.3f}")
 plt.xlabel("Actual Price (Toman)")
 plt.ylabel("Predicted Price (Toman)")
 plt.title("Actual vs Predicted Prices (XGBRegr)")
 plt.grid(True)
-plt.savefig('actual_vs_predicted_xgboost.png')  # Save the plot as a PNG file
 plt.show()
 
 # upload kardan model va scaler va feature columns baraye estefade dar app.
