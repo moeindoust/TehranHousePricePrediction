@@ -24,7 +24,7 @@ def remove_outliers_iqr(df, column):
 # load karardan data
 # hatamn address file ra qabl az ejra check konid
 try:
-    df_original = pd.read_csv('C:\\Users\\Doust\\NoteBook\\houseprice_maktabkhone\\housepriceMKclean.csv')
+    df_original = pd.read_csv(r'data/housepriceMKclean.csv')
 except FileNotFoundError:
     print("Error: 'housepriceMKclean.csv' not found. Please ensure the file is accessible in the correct path.")
     exit()
@@ -108,15 +108,17 @@ plt.xlabel("Actual Price (Toman)")
 plt.ylabel("Predicted Price (Toman)")
 plt.title("Actual vs Predicted Prices (XGBRegr)")
 plt.grid(True)
+plt.savefig('actual_vs_predicted_xgboost.png')  # Save the plot as a PNG file
 plt.show()
 
 # upload kardan model va scaler va feature columns baraye estefade dar app.
-joblib.dump(model, 'house_price_model.joblib')
-print("\nModel saved successfully as 'house_price_model.joblib'")
 
-joblib.dump(scaler, 'scaler.joblib')
-print("Scaler saved successfully as 'scaler.joblib'")
+# joblib.dump(model, 'house_price_model.joblib')
+# print("\nModel saved successfully as 'house_price_model.joblib'")
 
-joblib.dump(X.columns.tolist(), 'features_columns.joblib')
-print("Feature columns saved successfully as 'features_columns.joblib'")
+# joblib.dump(scaler, 'scaler.joblib')
+# print("Scaler saved successfully as 'scaler.joblib'")
+
+# joblib.dump(X.columns.tolist(), 'features_columns.joblib')
+# print("Feature columns saved successfully as 'features_columns.joblib'")
 
